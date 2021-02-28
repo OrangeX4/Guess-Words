@@ -1,4 +1,4 @@
-import { Card } from 'antd'
+import { Card, message } from 'antd'
 import { RetweetOutlined } from '@ant-design/icons'
 import ReactDOM from 'react-dom'
 import React from 'react'
@@ -233,7 +233,7 @@ for (let x = 0; x < 5; x++) {
     for (let y = 0; y < 5; y++) {
 
         const newWord = getWord()
-        
+
         let isDuplicated = false
 
         for (let i = 0; i < 5; i++) {
@@ -243,7 +243,7 @@ for (let x = 0; x < 5; x++) {
             }
         }
 
-        if(!isDuplicated){
+        if (!isDuplicated) {
             if (data[x][y].origin === 'none') {
                 data[x][y].word = newWord
                 data[x][y].origin = 'blue'
@@ -266,6 +266,23 @@ function handleClick(row, col, color) {
         ReactDOM.render(<React.StrictMode>
             <App />
         </React.StrictMode>, document.getElementById('root'));
+
+        let redCount = 0
+        let blueCount = 0
+
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+                if(data[i][j].color === 'red') redCount++
+                if(data[i][j].color === 'blue') blueCount++
+            }
+        }
+
+        if(12 - redCount === 0) {
+            message.success('Red win!')
+        } else if(12 - blueCount === 0) {
+            message.success('Blue win!')
+        }
+        message.info(`There are ${12 - redCount} red items left and ${12 - blueCount} blue items left.`)
     }
 }
 
@@ -282,7 +299,7 @@ function Grid(props) {
         return (
             <Card onClick={() => { handleClick(props.row, props.col, props.color) }}
                 hoverable={props.color === 'black'}
-                style={{ color: props.color, backgroundColor: color[props.origin] }}
+                style={{ color: props.color, backgroundColor: props.color === 'black' ? color[props.origin] : 'white' }}
                 className="card-style">
                 { props.children}
             </Card>
